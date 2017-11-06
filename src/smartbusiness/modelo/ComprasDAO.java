@@ -1,4 +1,4 @@
-
+﻿
 package smartbusiness.modelo;
 
 import java.sql.Connection;
@@ -223,7 +223,7 @@ public class ComprasDAO {
         stm.close();
     }
     /**
-     * Método responsável por excluir uma compra no banco de dados (Especificada pela chave primário).
+     * Método responsável por excluir uma compra no banco de dados (Especificada pel chave primário).
      * @param c Objeto da classe Compras.
      * @throws SQLException 
      */ 
