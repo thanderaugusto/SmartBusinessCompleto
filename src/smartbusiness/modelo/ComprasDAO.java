@@ -101,6 +101,7 @@ public class ComprasDAO {
                                     rs.getInt("fk_fornecedor"), 
                                     rs.getInt("numero"), 
                                     rs.getDate("datas"));
+            System.out.println("");
             aux.add(c);
         }
         
