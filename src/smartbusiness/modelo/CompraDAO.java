@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import smartbusiness.negocio.Compra;
 import smartbusiness.negocio.CompraItem;
@@ -65,7 +64,7 @@ public class CompraDAO {
      * @return Objeto da classe Compra
      * @throws SQLException 
      */
-    public static Compra retrieve(int pk_compra) throws SQLException{
+    public static Compra retrieve(int pk_compra) throws SQLException, ClassNotFoundException{
         
         Connection conn = BancoDados.createConnection();
         
@@ -84,6 +83,7 @@ public class CompraDAO {
                                 rs.getDate("datas"));
         
         c.setFornecedor(FornecedorDAO.retrieve(rs.getInt("fk_fornecedor")));
+        c.setItens(CompraItemDAO.retrieveAll(rs.getInt("pk_compra")));
         
         return c;
     }
@@ -94,7 +94,7 @@ public class CompraDAO {
      * @return ArrayList de Compra
      * @throws SQLException 
      */
-    public static ArrayList<Compra> retrieveAll() throws SQLException{
+    public static ArrayList<Compra> retrieveAll() throws SQLException, ClassNotFoundException{
         
         ArrayList<Compra> aux = new ArrayList<>();
         
@@ -110,6 +110,7 @@ public class CompraDAO {
                                     rs.getInt("numero"), 
                                     rs.getDate("datas"));   
             c.setFornecedor(FornecedorDAO.retrieve(rs.getInt("fk_fornecedor")));
+            c.setItens(CompraItemDAO.retrieveAll(rs.getInt("pk_compra")));
             aux.add(c);
             
             
@@ -153,7 +154,7 @@ public class CompraDAO {
       
     }
     
-    public static ArrayList<Compra> retrieveByFornecedores(Fornecedor f) throws SQLException{
+    public static ArrayList<Compra> retrieveByFornecedores(int fk_fornecedor) throws SQLException, ClassNotFoundException{
            ArrayList<Compra> aux = new ArrayList<>();
            
            Connection conn = BancoDados.createConnection();
@@ -162,7 +163,7 @@ public class CompraDAO {
            
            PreparedStatement stm = conn.prepareStatement(sql);
            
-           stm.setInt(1, f.getPk_fornecedor());
+           stm.setInt(1, fk_fornecedor);
            stm.execute();
               
            ResultSet rs = stm.getResultSet();
@@ -171,7 +172,9 @@ public class CompraDAO {
                Compra c = new Compra(rs.getInt("pk_compra"), 
                                        rs.getInt("fk_fornecedor"), 
                                        rs.getInt("numero"),
-                                       rs.getDate("data"));
+                                       rs.getDate("datas"));
+               c.setFornecedor(FornecedorDAO.retrieve(rs.getInt("fk_fornecedor")));
+               c.setItens(CompraItemDAO.retrieveAll(rs.getInt("pk_compra")));
                aux.add(c);
                
         }
@@ -187,23 +190,19 @@ public class CompraDAO {
      * @return ArrayList de Compra
      * @throws SQLException 
      */
-    public static ArrayList<Compra> retriaveByData(LocalDate dataInicial, LocalDate dataFinal) throws SQLException{
+    public static ArrayList<Compra> retriaveByData(Date dataInicial, Date dataFinal) throws SQLException{
         if (dataInicial == null || dataFinal == null){
             System.out.println("Digite as datas corretamente!");
         }
-        
-        
-       Date date1 = Date.valueOf(dataInicial);
-       Date date2 = Date.valueOf(dataFinal);
-       
+               
         ArrayList<Compra> aux = new ArrayList<>();
         
         Connection conn = BancoDados.createConnection();
         String sql = "select * from compras where datas between ? and ?";
         PreparedStatement stm = conn.prepareStatement(sql);
         
-        stm.setDate(1, date1);
-        stm.setDate(2, date2);
+        stm.setDate(1, dataInicial);
+        stm.setDate(2, dataFinal);
         
         
         ResultSet rs = stm.executeQuery();
@@ -236,27 +235,26 @@ public class CompraDAO {
         
         
         PreparedStatement stm = conn.prepareStatement(sql);
-        stm.setInt(1, c.getPk_compra());
-        stm.setInt(2, c.getFornecedor().getPk_fornecedor());
-        stm.setInt(3, c.getNumero());
-        stm.setDate(4, c.getData());
+        stm.setInt(4, c.getPk_compra());
+        stm.setInt(1, c.getFk_fornecedor());
+        stm.setInt(2, c.getNumero());
+        stm.setDate(3, c.getData());
         
         stm.execute();
         stm.close();
         
         
         for (CompraItem aux : c.getItens()) {
-             
             CompraItemDAO.update(aux);
         }
     }
     /**
-     * Método responsável por excluir uma compra no banco de dados (Especificada pela chave primário).
+     * Método responsável por excluir uma compra no banco de dados (Especificada pela chave primária).
      * @param c Objeto da classe Compra.
      * @throws SQLException 
      */ 
-    public static void delete(Compra c) throws SQLException{
-        if (c.getPk_compra()==0){
+    public static void delete(int pk_compra) throws SQLException{
+        if (pk_compra==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
 
@@ -265,7 +263,7 @@ public class CompraDAO {
         Connection conn = BancoDados.createConnection();
         PreparedStatement stm = conn.prepareStatement(sql);
         
-        stm.setInt(1, c.getPk_compra());       
+        stm.setInt(1, pk_compra);       
         stm.execute();
         stm.close();        
     }

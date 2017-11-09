@@ -20,7 +20,7 @@ import smartbusiness.negocio.FornecedorEndereco;
 public class Main {
 
     public static void main(String[] args) throws SQLException, ParseException, ClassNotFoundException {
-//ArrayList<Compras> test = CompraDAO.retrieveAll();
+//ArrayList<Compra> test = CompraDAO.retrieveAll();
 // 
 //for(Compra c:test){
 //System.out.println(c);
@@ -31,7 +31,7 @@ public class Main {
 //System.out.println(c);
 //}
 
-        System.out.println(FornecedorDAO.retrieveAll());
+        System.out.println(CompraDAO.retrieveByFornecedores(2));
 
    
     

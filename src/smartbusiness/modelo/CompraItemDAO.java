@@ -87,10 +87,37 @@ public class CompraItemDAO {
             ci.setProdutos(ProdutoDAO.retrieve(rs.getInt("fk_produto")));
              aux.add(ci);
         }
+        return aux;
+    }
+        
+        public static ArrayList<CompraItem> retrieveAll(int fk_compra) throws SQLException, ClassNotFoundException{
+        
+        ArrayList<CompraItem> aux = new ArrayList<>();
+        
+        Connection conn = BancoDados.createConnection();
+        
+        String sql = "SELECT * FROM compras_itens where fk_compra=?";
+        PreparedStatement stm = conn.prepareStatement(sql);
+        stm.setInt(1, fk_compra);
+        
+        stm.execute();
+        
+        ResultSet rs = stm.getResultSet();
+        
+        while(rs.next()) {
+            CompraItem ci = new CompraItem(rs.getInt("pk_item"), 
+                                               rs.getInt("fk_compra"),
+                                               rs.getInt("fk_produto"),
+                                               rs.getFloat("qtd"),
+                                               rs.getFloat("valor_unitario"));
+            ci.setProdutos(ProdutoDAO.retrieve(rs.getInt("fk_produto")));
+             aux.add(ci);
+        }
         
                 
         return aux;
     }
+        
      /** Método para retornar Relatorio de acordo com o produto e a compra do banco de dado*/
     public static ArrayList<CompraItem> retrieveByProduto() throws SQLException{
         
@@ -147,8 +174,8 @@ public class CompraItemDAO {
         stm.close();
     }
     
-    public static void delete(CompraItem ci) throws SQLException {
-        if (ci.getPk_item()==0){
+    public static void delete(int pk_item) throws SQLException {
+        if (pk_item==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
         
@@ -157,7 +184,7 @@ public class CompraItemDAO {
         Connection conn = BancoDados.createConnection();
         PreparedStatement stm = conn.prepareStatement(sql);
         
-        stm.setInt(1, ci.getPk_item());       
+        stm.setInt(1, pk_item);       
         stm.execute();
         stm.close();   
         

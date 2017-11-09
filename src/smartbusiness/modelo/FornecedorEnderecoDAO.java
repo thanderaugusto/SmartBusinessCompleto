@@ -97,7 +97,7 @@ public class FornecedorEnderecoDAO {
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
         
-        String sql = "UPDATE fornecedores_enderecos SET fk_fornecedor=?, logradouro=?, bairro=?, cidade=?, estado=?, pais=?, cep=?";
+        String sql = "UPDATE fornecedores_enderecos SET fk_fornecedor=?, logradouro=?, bairro=?, cidade=?, estado=?, pais=?, cep=? WHERE pk_endereco=?";
         
         Connection conn = BancoDados.createConnection();
         
@@ -113,19 +113,21 @@ public class FornecedorEnderecoDAO {
         
         stm.execute();
         stm.close();
+        
+        
 
     }
     
-    public static void delete (FornecedorEndereco fe) throws SQLException{
-        if (fe.getPk_endereco()==0){
-           throw new SQLException("");
+    public static void delete (int pk_endereco) throws SQLException{
+        if (pk_endereco==0){
+           throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
         
         String sql = "DELETE FROM forncedores_enderecos WHERE pk_forncedores=?";
         
         Connection conn = BancoDados.createConnection();
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setInt(1, fe.getPk_endereco());
+            stm.setInt(1, pk_endereco);
             stm.execute();
             stm.close();
         }

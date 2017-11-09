@@ -102,6 +102,7 @@ public class Compra {
                ", Fornecedor: " + getFornecedor().getNome() + 
                ", Numero: " + numero + 
                ", Data: " + data +
+               ", Itens: " + getItens() +
                "\n";
     }
 
