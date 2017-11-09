@@ -5,18 +5,18 @@ package smartbusiness.negocio;
 import java.util.ArrayList;
 
 
-public class Fornecedores {
+public class Fornecedor {
     private int pk_fornecedor;
     private String nome;
     private String cpf;
-    private ArrayList<FornecedoresEnderecos> enderecos; 
+    private ArrayList<FornecedorEndereco> enderecos; 
 
     
     
-    public Fornecedores() {
+    public Fornecedor() {
     }
 
-    public Fornecedores(String nome, String cpf, FornecedoresEnderecos enderecos) {
+    public Fornecedor(String nome, String cpf, FornecedorEndereco enderecos) {
         this.nome = nome;
         this.cpf = cpf;
         getEnderecos().add(enderecos);
@@ -24,26 +24,26 @@ public class Fornecedores {
     
     
 
-    public Fornecedores(int pk_fornecedor, String nome, String cpf) {
+    public Fornecedor(int pk_fornecedor, String nome, String cpf) {
         this.pk_fornecedor = pk_fornecedor;
         this.nome = nome;
         this.cpf = cpf;
     }
 
-    public Fornecedores(String nome, String cpf) {
+    public Fornecedor(String nome, String cpf) {
         this.nome = nome;
         this.cpf = cpf;
     }
     
     
-    public ArrayList<FornecedoresEnderecos> getEnderecos() {
+    public ArrayList<FornecedorEndereco> getEnderecos() {
         if(enderecos == null){
             enderecos = new ArrayList<>();
         }
         return enderecos;
     }
 
-    public void setEnderecos(ArrayList<FornecedoresEnderecos> enderecos) {
+    public void setEnderecos(ArrayList<FornecedorEndereco> enderecos) {
         this.enderecos = enderecos;
     }
     
@@ -75,8 +75,13 @@ public class Fornecedores {
 
     @Override
     public String toString() {
-        return "Fornecedores{" + "pk_fornecedor=" + pk_fornecedor + ", nome=" + nome + ", cpf=" + cpf + '}';
+        return "pk_fornecedor = " + pk_fornecedor + 
+               ", nome = " + nome + 
+               ", cpf = " + cpf +
+               ", enderecos = " + getEnderecos() +"\n\n";
     }
+
+    
     
     
 }

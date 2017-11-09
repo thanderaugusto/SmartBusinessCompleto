@@ -7,10 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import smartbusiness.negocio.ComprasItens;
+import smartbusiness.negocio.CompraItem;
 
 
-public class ComprasItensDAO {
+public class CompraItemDAO {
     
  /**
  * Realiza as resposabilidades comportamentais necessárias para a persistencia
@@ -21,7 +21,7 @@ public class ComprasItensDAO {
     
     
     /** Método para inserção de dados no banco de dados do Compras Itens*/
-    public static int create(ComprasItens ci) throws SQLException{
+    public static int create(CompraItem ci) throws SQLException{
         Connection conn = BancoDados.createConnection();
         
         PreparedStatement stm = conn.prepareStatement("INSERT INTO compras_itens(fk_compra, fk_produto, qtd, valor_unitario)\n" +
@@ -47,26 +47,30 @@ public class ComprasItensDAO {
         return ci.getPk_item();
     }
     /** Método para retornar dados de um id específico do banco de dados*/
-    public static ComprasItens retrieve(int pk_item) throws SQLException{
-        
+    public static CompraItem retrieve(int pk_item) throws SQLException, ClassNotFoundException{
         Connection conn = BancoDados.createConnection();
         
         PreparedStatement stm = conn.prepareStatement("SELECT * FROM compras_itens WHERE pk_item = ?");
-        
         stm.setInt(1, pk_item);
-        
         stm.execute();
         
         ResultSet rs = stm.getResultSet();
-        
         rs.next();
-        return new ComprasItens(rs.getInt("pk_item"), rs.getInt("fk_compra"), rs.getInt("fk_produto"), rs.getFloat("qtd"), rs.getFloat("valor_unitario"));
+        
+        CompraItem ci =  new CompraItem(rs.getInt("pk_item"), 
+                                rs.getInt("fk_compra"),
+                                rs.getInt("fk_produto"),
+                                rs.getFloat("qtd"), 
+                                rs.getFloat("valor_unitario"));
+        ci.setProdutos(ProdutoDAO.retrieve(rs.getInt("fk_produto")));
+        
+        return ci;
     }
     
     /** Método para retornar dados de todos itens do banco de dados*/
-    public static ArrayList<ComprasItens> retrieveAll() throws SQLException{
+    public static ArrayList<CompraItem> retrieveAll() throws SQLException, ClassNotFoundException{
         
-        ArrayList<ComprasItens> aux = new ArrayList<>();
+        ArrayList<CompraItem> aux = new ArrayList<>();
         
         Connection conn = BancoDados.createConnection();
         
@@ -75,20 +79,22 @@ public class ComprasItensDAO {
         ResultSet rs = conn.createStatement().executeQuery(sql);
         
         while(rs.next()) {
-            ComprasItens ci = new ComprasItens(rs.getInt("pk_item"), 
+            CompraItem ci = new CompraItem(rs.getInt("pk_item"), 
                                                rs.getInt("fk_compra"),
                                                rs.getInt("fk_produto"),
                                                rs.getFloat("qtd"),
                                                rs.getFloat("valor_unitario"));
+            ci.setProdutos(ProdutoDAO.retrieve(rs.getInt("fk_produto")));
              aux.add(ci);
         }
+        
                 
         return aux;
     }
      /** Método para retornar Relatorio de acordo com o produto e a compra do banco de dado*/
-    public static ArrayList<ComprasItens> retrieveByProduto() throws SQLException{
+    public static ArrayList<CompraItem> retrieveByProduto() throws SQLException{
         
-        ArrayList<ComprasItens> aux = new ArrayList<>();
+        ArrayList<CompraItem> aux = new ArrayList<>();
         
         Connection conn = BancoDados.createConnection();
         
@@ -121,7 +127,7 @@ public class ComprasItensDAO {
     
     
      /** Método para alterações de algum dado do banco de dados*/
-    public static void update(ComprasItens ci) throws SQLException {
+    public static void update(CompraItem ci) throws SQLException {
         if (ci.getPk_item()==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
@@ -141,7 +147,7 @@ public class ComprasItensDAO {
         stm.close();
     }
     
-    public static void delete(ComprasItens ci) throws SQLException {
+    public static void delete(CompraItem ci) throws SQLException {
         if (ci.getPk_item()==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
@@ -157,4 +163,5 @@ public class ComprasItensDAO {
         
         
     }
+
 }

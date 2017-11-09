@@ -1,23 +1,23 @@
-
 package smartbusiness.negocio;
 
 
-public class FornecedoresEnderecos {
-    
+
+public class Endereco {
     private int pk_endereco;
-    private int fk_fornecedor;
-    private Fornecedores fornecedor;
+    
     private String logradouro;
     private String bairro;
     private String cidade;
     private String estado;
     private String pais;
     private String cep;
+
+    private boolean sync=false;
     
-    public FornecedoresEnderecos() {
+    public Endereco() {
     }
 
-    public FornecedoresEnderecos(String logradouro, String bairro, String cidade, String estado, String pais, String cep) {
+    public Endereco(String logradouro, String bairro, String cidade, String estado, String pais, String cep) {
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -25,12 +25,9 @@ public class FornecedoresEnderecos {
         this.pais = pais;
         this.cep = cep;
     }
-    
-    
 
-    public FornecedoresEnderecos(int pk_endereco, int fk_fornecedor, String logradouro, String bairro, String cidade, String estado, String pais, String cep) {
+    public Endereco(int pk_endereco, String logradouro, String bairro, String cidade, String estado, String pais, String cep) {
         this.pk_endereco = pk_endereco;
-        this.fk_fornecedor = fk_fornecedor;
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -39,24 +36,6 @@ public class FornecedoresEnderecos {
         this.cep = cep;
     }
 
-    public FornecedoresEnderecos(int fk_fornecedor, String logradouro, String bairro, String cidade, String estado, String pais, String cep) {
-        this.fk_fornecedor = fk_fornecedor;
-        this.logradouro = logradouro;
-        this.bairro = bairro;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.pais = pais;
-        this.cep = cep;
-    }
-
-    public Fornecedores getFornecedor() {
-        return fornecedor;
-    }
-
-    public void setFornecedor(Fornecedores fornecedor) {
-        this.fornecedor = fornecedor;
-    }
-    
     
 
     public int getPk_endereco() {
@@ -67,14 +46,9 @@ public class FornecedoresEnderecos {
         this.pk_endereco = pk_endereco;
     }
 
-    public int getFk_fornecedor() {
-        return fk_fornecedor;
-    }
-
-    public void setFk_fornecedor(int fk_fornecedor) {
-        this.fk_fornecedor = fk_fornecedor;
-    }
-
+   
+    
+    
     public String getLogradouro() {
         return logradouro;
     }
@@ -106,6 +80,14 @@ public class FornecedoresEnderecos {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+    
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
 
     public String getPais() {
         return pais;
@@ -125,7 +107,19 @@ public class FornecedoresEnderecos {
 
     @Override
     public String toString() {
-        return "FornecedoresEnderecosDAO{" + "pk_endereco=" + pk_endereco + ", fk_fornecedor=" + fk_fornecedor + ", logradouro=" + logradouro + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado + ", pais=" + pais + ", cep=" + cep + '}';
+        return "logradouro=" + logradouro + 
+                ", bairro=" + bairro + 
+                ", cidade=" + cidade + 
+                ", estado=" + estado +
+                ", pais=" + pais + 
+                ", cep=" + cep;
     }
+ 
+    
+    
+ 
+
+    
+    
     
 }

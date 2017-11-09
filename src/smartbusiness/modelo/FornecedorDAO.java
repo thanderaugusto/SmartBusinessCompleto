@@ -6,12 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import smartbusiness.negocio.Fornecedores;
-import smartbusiness.negocio.FornecedoresEnderecos;
+import smartbusiness.negocio.Fornecedor;
+import smartbusiness.negocio.FornecedorEndereco;
 
 
-public class FornecedoresDAO {
-    public static int create (Fornecedores f) throws SQLException {
+public class FornecedorDAO {
+    public static int create (Fornecedor f) throws SQLException {
         Connection conn = BancoDados.createConnection();
         
         PreparedStatement stm = conn.prepareStatement("INSERT INTO fornecedores(nome, cpf) VALUES(?,?)"
@@ -29,17 +29,17 @@ public class FornecedoresDAO {
 
         f.setPk_fornecedor(pkfor);
 
-        for (FornecedoresEnderecos aux : f.getEnderecos()) {
+        for (FornecedorEndereco aux : f.getEnderecos()) {
             
             aux.setFk_fornecedor(pkfor);
-            FornecedoresEnderecosDAO.create(aux);
+            FornecedorEnderecoDAO.create(aux);
         }
 
         return pkfor;
 
     }
     
-    public static Fornecedores retrieve (int pk_fornecedor) throws SQLException{
+    public static Fornecedor retrieve (int pk_fornecedor) throws SQLException{
        Connection conn = BancoDados.createConnection();
        String sql = "select * from fornecedores where pk_fornecedor = ?";
        
@@ -51,48 +51,48 @@ public class FornecedoresDAO {
        rs.next();
        
         
-        Fornecedores f = new Fornecedores(rs.getInt("pk_fornecedor"),
+        Fornecedor f = new Fornecedor(rs.getInt("pk_fornecedor"),
                                 rs.getString("nome"),
                                 rs.getString("cpf"));
         
-        f.setEnderecos(FornecedoresEnderecosDAO.retrieveAll(pk_fornecedor));
+        f.setEnderecos(FornecedorEnderecoDAO.retrieveAll(f.getPk_fornecedor()));
 
         
         return f;
         
     }
        
-    public static ArrayList<Fornecedores> retrieveAll() throws SQLException{
-        ArrayList<Fornecedores> aux = new ArrayList<>();
+    public static ArrayList<Fornecedor> retrieveAll() throws SQLException{
+        ArrayList<Fornecedor> aux = new ArrayList<>();
         Connection conn = BancoDados.createConnection();
         
         String sql = "select * from fornecedores";
         
         ResultSet rs = conn.createStatement().executeQuery(sql);
         while (rs.next()){
-            Fornecedores f = new Fornecedores(rs.getInt("pk_fornecedor"),
+            Fornecedor f = new Fornecedor(rs.getInt("pk_fornecedor"),
                                               rs.getString("nome"),
                                               rs.getString("cpf"));
             
-            f.setEnderecos(FornecedoresEnderecosDAO.retrieveAll(f.getPk_fornecedor()));
+            f.setEnderecos(FornecedorEnderecoDAO.retrieveAll(rs.getInt("pk_fornecedor")));
             aux.add(f);
             
         }
         return aux;
     }
     
-    public static ArrayList<Fornecedores> retrieveByCidades(String cidade ) throws SQLException{
-        ArrayList<Fornecedores> aux = new ArrayList<>();
+    public static ArrayList<Fornecedor> retrieveByCidades(String nomeCidade ) throws SQLException{
+        ArrayList<Fornecedor> aux = new ArrayList<>();
         Connection conn = BancoDados.createConnection();  
         String sql = "SELECT f.* FROM fornecedores AS f LEFT JOIN fornecedores_enderecos AS fe ON f.pk_fornecedor = fe.fk_fornecedor WHERE fe.cidade=?";
         PreparedStatement stm = conn.prepareStatement(sql);
         
-        stm.setString(1, cidade);
+        stm.setString(1, nomeCidade);
         stm.execute();
         
         ResultSet rs = stm.getResultSet();
         while(rs.next()){
-           Fornecedores f = new Fornecedores(rs.getInt("pk_fornecedor"),
+           Fornecedor f = new Fornecedor(rs.getInt("pk_fornecedor"),
                                              rs.getString("nome"),
                                              rs.getString("cpf"));
                                              
@@ -102,18 +102,18 @@ public class FornecedoresDAO {
         return aux ;
     }
     
-    public static ArrayList<Fornecedores> retrieveByEstado(String estado) throws SQLException{
-        ArrayList<Fornecedores> aux = new ArrayList<>();
+    public static ArrayList<Fornecedor> retrieveByEstado(String nomeEstado) throws SQLException{
+        ArrayList<Fornecedor> aux = new ArrayList<>();
         Connection conn = BancoDados.createConnection();  
         String sql = "SELECT f.* FROM fornecedores AS f LEFT JOIN fornecedores_enderecos AS fe ON f.pk_fornecedor = fe.fk_fornecedor WHERE fe.estado=?";
         PreparedStatement stm = conn.prepareStatement(sql);
         
-        stm.setString(1, estado);
+        stm.setString(1, nomeEstado);
         stm.execute();
         
         ResultSet rs = stm.getResultSet();
         while(rs.next()){
-           Fornecedores f = new Fornecedores(rs.getInt("pk_fornecedor"),
+           Fornecedor f = new Fornecedor(rs.getInt("pk_fornecedor"),
                                              rs.getString("nome"),
                                              rs.getString("cpf"));
            aux.add(f);
@@ -122,9 +122,9 @@ public class FornecedoresDAO {
     }
     
 
-    public static void update (Fornecedores f) throws SQLException{
+    public static void update (Fornecedor f) throws SQLException{
         Connection conn =  BancoDados.createConnection();
-        String sql = "UPDATE fornecedor SET nome=?, cpf=? where pk_fornecedor=?";
+        String sql = "UPDATE fornecedores SET nome=?, cpf=? where pk_fornecedor=?";
         PreparedStatement stm = conn.prepareStatement(sql);
         
         stm.setString(1, f.getNome());
@@ -135,12 +135,12 @@ public class FornecedoresDAO {
         stm.close();
       }
     
-    public static void delete (Fornecedores f) throws SQLException{
+    public static void delete (int pk_fornecedor) throws SQLException{
         Connection conn = BancoDados.createConnection();
         String sql = "DELETE FROM fornecedores WHERE pk_fonecedor=?";
         PreparedStatement stm = conn.prepareStatement(sql);
         
-        stm.setInt(1, f.getPk_fornecedor());
+        stm.setInt(1, pk_fornecedor);
         stm.execute();
         stm.close();
        

@@ -6,12 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import smartbusiness.negocio.FornecedoresEnderecos;
+import smartbusiness.negocio.FornecedorEndereco;
 
 
-public class FornecedoresEnderecosDAO {
+public class FornecedorEnderecoDAO {
 
-    public static int create(FornecedoresEnderecos fe) throws SQLException{ 
+    public static int create(FornecedorEndereco fe) throws SQLException{ 
             
         
         Connection conn = BancoDados.createConnection();
@@ -43,7 +43,7 @@ public class FornecedoresEnderecosDAO {
         
     }
     
-    public static FornecedoresEnderecos retrieve (int pk_endereco) throws SQLException{
+    public static FornecedorEndereco retrieve (int pk_endereco) throws SQLException{
         Connection conn = BancoDados.createConnection();
          PreparedStatement stm = conn.prepareStatement("SELECT * FROM fornecedores_enderecos WHERE pk_endereco = ?");
         
@@ -54,14 +54,14 @@ public class FornecedoresEnderecosDAO {
         ResultSet rs = stm.getResultSet();
         
         rs.next();
-        return new FornecedoresEnderecos(rs.getInt("pk_endereco"), rs.getInt("fk_fornecedor"), rs.getString("logradouro"),
+        return new FornecedorEndereco(rs.getInt("pk_endereco"), rs.getInt("fk_fornecedor"), rs.getString("logradouro"),
         rs.getString("bairro"), rs.getString("cidade"), rs.getString("estado"), rs.getString("pais"), rs.getString("cep"));
            
      
        }
-     public static ArrayList<FornecedoresEnderecos> retrieveAll(int fk_fornecedor) throws SQLException{
+     public static ArrayList<FornecedorEndereco> retrieveAll(int fk_fornecedor) throws SQLException{
          
-        ArrayList<FornecedoresEnderecos> aux= new ArrayList<>();
+        ArrayList<FornecedorEndereco> aux= new ArrayList<>();
          
         Connection conn = BancoDados.createConnection();
          
@@ -75,14 +75,14 @@ public class FornecedoresEnderecosDAO {
         ResultSet rs = stm.getResultSet();
          
          while (rs.next()){
-             FornecedoresEnderecos fe = new FornecedoresEnderecos(rs.getInt("pk_endereco"),
+             FornecedorEndereco fe = new FornecedorEndereco(rs.getInt("pk_endereco"),
                                                                   rs.getInt("fk_fornecedor"),
                                                                   rs.getString("logradouro"),
                                                                   rs.getString("bairro"),
                                                                   rs.getString("cidade"),
                                                                   rs.getString("estado"),
                                                                   rs.getString("pais"),
-                                                                  rs.getString("cep"));
+                                                                  rs.getString("cep")); 
              
              aux.add(fe);
              
@@ -92,7 +92,7 @@ public class FornecedoresEnderecosDAO {
                
     }
 
-    public static void update(FornecedoresEnderecos fe) throws SQLException{
+    public static void update(FornecedorEndereco fe) throws SQLException{
         if (fe.getPk_endereco()==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
         }
@@ -116,7 +116,7 @@ public class FornecedoresEnderecosDAO {
 
     }
     
-    public static void delete (FornecedoresEnderecos fe) throws SQLException{
+    public static void delete (FornecedorEndereco fe) throws SQLException{
         if (fe.getPk_endereco()==0){
            throw new SQLException("");
         }

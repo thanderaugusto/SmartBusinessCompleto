@@ -3,32 +3,43 @@
 package smartbusiness.negocio;
 
 
-public class ComprasItens {
+public class CompraItem {
     private int pk_item;
     private int fk_compra;
+    private Produto produtos ;
     private int fk_produto;
     private float qtde;
     private float valorUnitario;
 
-    public ComprasItens() {
+    public CompraItem() {
     }
 
-    public ComprasItens(int fk_produto, float qtde, float valorUnitario) {
-        this.fk_produto = fk_produto;
+    public CompraItem(Produto produtos, float qtde, float valorUnitario) {
+        this.produtos = produtos;
         this.qtde = qtde;
         this.valorUnitario = valorUnitario;
     }
 
     
-    public ComprasItens(int pk_item, int fk_compra, int fk_produto, float qtde, float valorUnitario) {
+    public CompraItem(int pk_item, int fk_compra, Produto produtos, float qtde, float valorUnitario) {
+        this.pk_item = pk_item;
+        this.fk_compra = fk_compra;
+        this.produtos = produtos;
+        this.qtde = qtde;
+        this.valorUnitario = valorUnitario;
+    }
+
+    public CompraItem(int pk_item, int fk_compra, int fk_produto, float qtde, float valorUnitario) {
         this.pk_item = pk_item;
         this.fk_compra = fk_compra;
         this.fk_produto = fk_produto;
         this.qtde = qtde;
         this.valorUnitario = valorUnitario;
     }
+    
+    
 
-    public ComprasItens(int fk_compra, int fk_produto, float qtde, float valorUnitario) {
+    public CompraItem(int fk_compra, int fk_produto, float qtde, float valorUnitario) {
         this.fk_compra = fk_compra;
         this.fk_produto = fk_produto;
         this.qtde = qtde;
@@ -58,6 +69,17 @@ public class ComprasItens {
     public void setFk_produto(int fk_produto) {
         this.fk_produto = fk_produto;
     }
+    
+
+    public Produto getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(Produto produtos) {
+        this.produtos = produtos;
+    }
+
+    
 
     public float getQtde() {
         return qtde;
@@ -77,8 +99,16 @@ public class ComprasItens {
 
     @Override
     public String toString() {
-        return "ComprasItens{" + "pk_item=" + pk_item + ", fk_compra=" + fk_compra + ", fk_produto=" + fk_produto + ", qtde=" + qtde + ", valorUnitario=" + valorUnitario + '}';
+        return "pk_item: " + pk_item + 
+                ", fk_compra: " + fk_compra + 
+                ", Produtos: " + getProdutos().getNome() + 
+                ", Quantidade: " + qtde + 
+                ", Valor Unitário: " + valorUnitario +"\n\n";
     }
+
+   
+
+    
     
     
 }

@@ -6,18 +6,18 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 
-public class Compras {
+public class Compra {
     private int pk_compra;
-    private Fornecedores fornecedor;
+    private Fornecedor fornecedor;
     private int fk_fornecedor;
     private int numero;
     private Date data;
-    private ArrayList<ComprasItens> itens;
+    private ArrayList<CompraItem> itens;
     
-    public Compras() {
+    public Compra() {
     }
 
-    public Compras(int pk_compra, int numero, Fornecedores fornecedor,  Date data, ComprasItens itens) {
+    public Compra(int pk_compra, int numero, Fornecedor fornecedor,  Date data, CompraItem itens) {
         this.pk_compra = pk_compra;
         this.fornecedor = fornecedor;
         this.numero = numero;
@@ -25,14 +25,14 @@ public class Compras {
         getItens().add(itens);
     }
 
-    public Compras(int numero, Fornecedores fornecedor,  Date data, ComprasItens itens) {
+    public Compra(int numero, Fornecedor fornecedor,  Date data, CompraItem itens) {
         this.fornecedor = fornecedor;
         this.numero = numero;
         this.data = data;
         getItens().add(itens);
     }
 
-    public Compras(int pk_compra, int fk_fornecedor, int numero, Date data) {
+    public Compra(int pk_compra, int fk_fornecedor, int numero, Date data) {
         this.pk_compra = pk_compra;
         this.fk_fornecedor = fk_fornecedor;
         this.numero = numero;
@@ -51,11 +51,11 @@ public class Compras {
         this.pk_compra = pk_compra;
     }
 
-    public Fornecedores getFornecedor() {
+    public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
-    public void setFornecedor(Fornecedores fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
 
@@ -75,21 +75,39 @@ public class Compras {
         this.data = data;
     }
 
-    public ArrayList<ComprasItens> getItens() {
+    public int getFk_fornecedor() {
+        return fk_fornecedor;
+    }
+
+    public void setFk_fornecedor(int fk_fornecedor) {
+        this.fk_fornecedor = fk_fornecedor;
+    }
+    
+    
+    
+    public ArrayList<CompraItem> getItens() {
         if (itens == null){
             itens = new ArrayList<>();
         }
         return itens;
     }
 
-    public void setItens(ArrayList<ComprasItens> itens) {
+    public void setItens(ArrayList<CompraItem> itens) {
         this.itens = itens;
     }
 
     @Override
     public String toString() {
-        return "Compras{" + "pk_compra=" + pk_compra + ", fornecedor=" + fornecedor + ", numero=" + numero + ", data=" + data + ", itens=" + itens + '}';
+        return "pk_compra: " + pk_compra + 
+               ", Fornecedor: " + getFornecedor().getNome() + 
+               ", Numero: " + numero + 
+               ", Data: " + data +
+               "\n";
     }
+
+   
+    
+    
     
     
     
