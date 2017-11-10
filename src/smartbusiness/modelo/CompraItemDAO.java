@@ -20,7 +20,12 @@ public class CompraItemDAO {
  */
     
     
-    /** Método para inserção de dados no banco de dados do Compras Itens*/
+    /** Método responsável pela inserção dos dados da compra no banco de dados
+     * @param ci Objeto da classe CompraItem
+     * @return ci.getPk_item() Chave primária fornecida pelo banco de dados
+     * @throws SQLException lança uma exceção
+     * 
+     */
     public static int create(CompraItem ci) throws SQLException{
         Connection conn = BancoDados.createConnection();
         
@@ -29,7 +34,7 @@ public class CompraItemDAO {
         
        
         stm.setInt(1, ci.getFk_compra());
-        stm.setInt(2, ci.getFk_produto());
+        stm.setInt(2, ci.getProdutos().getPk_produto());
         stm.setFloat(3, ci.getQtde());
         stm.setFloat(4, ci.getValorUnitario());
         
@@ -46,7 +51,12 @@ public class CompraItemDAO {
        
         return ci.getPk_item();
     }
-    /** Método para retornar dados de um id específico do banco de dados*/
+    /** Método responsável por realizar uma busca no banco de dados por uma chave primária informada
+     * @param pk_item Chave primaria fornecia pelo usuario, para realizar a pesquisa no banco de dados
+     * @return Objeto da classe CompraItem
+     * @throws SQLException lança uma exceção
+     * @throws ClassNotFoundException carrega uma classe via String 
+     */
     public static CompraItem retrieve(int pk_item) throws SQLException, ClassNotFoundException{
         Connection conn = BancoDados.createConnection();
         
@@ -67,7 +77,11 @@ public class CompraItemDAO {
         return ci;
     }
     
-    /** Método para retornar dados de todos itens do banco de dados*/
+    /** Método responsável por buscar e retornar todos os itens do CompraItem
+     * @return ArrayList de CompraItem
+     * @throws SQLException lança uma exceção
+     * @throws ClassNotFoundException carrega uma classe via String
+     */
     public static ArrayList<CompraItem> retrieveAll() throws SQLException, ClassNotFoundException{
         
         ArrayList<CompraItem> aux = new ArrayList<>();
@@ -89,7 +103,12 @@ public class CompraItemDAO {
         }
         return aux;
     }
-        
+        /** Método responsável por buscar e retornar todos os itens do CompraItem
+        * @param fk_compra Chave estrangeira fornecia pelo usuario, para realizar a pesquisa no banco de dados 
+        * @return ArrayList de CompraItem por compra
+        * @throws SQLException lança uma exceção
+        * @throws ClassNotFoundException carrega uma classe via String
+        */
         public static ArrayList<CompraItem> retrieveAll(int fk_compra) throws SQLException, ClassNotFoundException{
         
         ArrayList<CompraItem> aux = new ArrayList<>();
@@ -118,42 +137,49 @@ public class CompraItemDAO {
         return aux;
     }
         
-     /** Método para retornar Relatorio de acordo com o produto e a compra do banco de dado*/
-    public static ArrayList<CompraItem> retrieveByProduto() throws SQLException{
+    /** Método responsável por retornar as somas e média dos produtos de acordo com sua chave estrangeira.
+    * @param fk_produto Chave estrangeira fornecia pelo usuario, para realizar a pesquisa no banco de dados
+    * @return Retorna resultado do produto buscado
+    * @throws SQLException lança uma exceção
+    */
+    public static String retrieveByProduto(int fk_produto) throws SQLException{
         
-        ArrayList<CompraItem> aux = new ArrayList<>();
         
         Connection conn = BancoDados.createConnection();
         
         String sql = "SELECT nome, sum(ci.valor_unitario) soma_valores, avg(ci.valor_unitario) media_valor, \n" +
                                                       "sum(ci.qtd) soma_produto, avg(ci.qtd) media_produto\n" +
                                                       "FROM produtos p join compras_itens ci on\n" +
-                                                      "p.pk_produto=ci.fk_produto\n" +
+                                                      "p.pk_produto=ci.fk_produto where fk_produto =?\n" +
                                                       "GROUP BY nome";     
+        PreparedStatement stm = conn.prepareStatement(sql);
         
-        ResultSet rs = conn.createStatement().executeQuery(sql);
+        stm.setInt(1, fk_produto);
         
-        while (rs.next()) {
+        
+        stm.execute();
+        ResultSet rs = stm.getResultSet();
+        
+       rs.next();
            String nome = rs.getString("nome");
            float somaUnitario = rs.getFloat("soma_valores");
            float mediaUnitario = rs.getFloat("media_valor");
            float somaQtdProduto = rs.getFloat("soma_produto");
            float mediaQtdProduto = rs.getFloat("media_produto");
-           System.out.println("\n=============================");
-            System.out.println("\nNome: "+nome+"\n"
+           
+           return ("\nNome: "+nome+"\n"
                     +"Soma Valores Unitario R$: "+somaUnitario+"\n"
                     +"Media Valores Unitario: "+mediaUnitario+"\n"
                     +"Soma Quantidade Produto: "+somaQtdProduto+"\n"
                     +"Media Quantidade Produto: "+mediaQtdProduto);
-            
-        }
-        
-        return aux;
-        
+       
     }
     
     
-     /** Método para alterações de algum dado do banco de dados*/
+     /**Método responsável por alterações de alguns dados de uma compraitem no banco de dados(Especificada pela chave primária).
+     * @param ci Objeto do classe CompraItem.
+     * @throws SQLException lança uma exceção
+     */
     public static void update(CompraItem ci) throws SQLException {
         if (ci.getPk_item()==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
@@ -173,7 +199,10 @@ public class CompraItemDAO {
         stm.execute();
         stm.close();
     }
-    
+    /* Método responsável por excluir uma compra no banco de dados (Especificada pela chave primário).
+     * @param pk_item Parâmetro da classe CompraItem.
+     * @throws SQLException lança uma exceção
+     */ 
     public static void delete(int pk_item) throws SQLException {
         if (pk_item==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
