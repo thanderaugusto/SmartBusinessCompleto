@@ -19,7 +19,7 @@ import smartbusiness.negocio.FornecedorEndereco;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, ParseException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
 //ArrayList<Compra> test = CompraDAO.retrieveAll();
 // 
 //for(Compra c:test){
@@ -30,8 +30,8 @@ public class Main {
 //for(Fornecedor c:test){
 //System.out.println(c);
 //}
-
-        System.out.println(CompraDAO.retrieveByFornecedores(2));
+//
+//        System.out.println(CompraDAO.retrieveByFornecedores(2));
 
    
     
@@ -82,4 +82,7 @@ java.sql.Date dataSQL = java.sql.Date.valueOf(dataInserir);
 //            CompraDAO.update(d);
 
 //        System.out.println(CompraDAO.retrieveAll());
-}}
+
+
+        System.out.println(CompraItemDAO.retrieveByProduto(2));
+    }}

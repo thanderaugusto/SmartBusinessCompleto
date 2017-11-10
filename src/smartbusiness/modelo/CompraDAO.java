@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import smartbusiness.negocio.Compra;
 import smartbusiness.negocio.CompraItem;
-import smartbusiness.negocio.Fornecedor;
 
 
  /** Realiza as responsabilidas comportamentais necessárias para a persistencia
@@ -23,7 +22,7 @@ public class CompraDAO {
     /** Método responsável pela inserção dos dados da compra no banco de dados
      * @param c Objeto da classe Compra
      * @return Chave primária fornecida pelo banco de dados
-     * @throws SQLException 
+     * @throws SQLException lança uma exceção
      * 
      */
     public static int create(Compra c) throws SQLException{
@@ -62,7 +61,8 @@ public class CompraDAO {
      * 
      * @param pk_compra Chave primária para realizar a pesquisa no banco de dados
      * @return Objeto da classe Compra
-     * @throws SQLException 
+     * @throws SQLException lança uma exceção
+     * @throws ClassNotFoundException carrega uma classe via String
      */
     public static Compra retrieve(int pk_compra) throws SQLException, ClassNotFoundException{
         
@@ -91,8 +91,9 @@ public class CompraDAO {
     
     /**
      * Método responsável por buscar e retornar todas as compras feitas.
-     * @return ArrayList de Compra
-     * @throws SQLException 
+     * @return ArrayList com as todas as comrpas encontradas
+     * @throws SQLException lança uma exceção
+     * @throws ClassNotFoundException carrega uma classe via String
      */
     public static ArrayList<Compra> retrieveAll() throws SQLException, ClassNotFoundException{
         
@@ -121,11 +122,11 @@ public class CompraDAO {
     }
     /**
      * Método responsável por fazer um relátorio de todas as compras realizadas comparando se elas já foram totalmente pagas.
-     * @return
-     * @throws SQLException 
+     * @return ArrayList com o relatório.
+     * @throws SQLException lança uma exceção
      */
-    public static ArrayList<Compra> retrieveRelatorioCompras() throws SQLException{
-           ArrayList<Compra> aux = new ArrayList<>();
+    public static String retrieveRelatorioCompras() throws SQLException{
+           String res = "";
                       Connection conn = BancoDados.createConnection();
            String sql = "select  f.nome , sum(ci.valor_unitario) valor_total, c.datas, fs.valor ,\n" +
                         "sum(ci.valor_unitario) < fs.valor  totalmente_paga  from \n" +
@@ -137,23 +138,30 @@ public class CompraDAO {
            ResultSet rs = conn.createStatement().executeQuery(sql);
            
            while (rs.next()) {
-               
                 String nome = rs.getString("nome");
                   Date data = rs.getDate("datas");
                   float valorsoma = rs.getFloat("valor_total");
                   float valor = rs.getFloat("valor");
                   boolean test = rs.getBoolean("totalmente_paga");
-                  System.out.println("=============================");
-               System.out.println("Nomes Fornecedores : "+ nome);
-               System.out.println("datas : "+ data);
-               System.out.println("Valor de Soma : "+ valorsoma );
-               System.out.println("Valor : "+ valor);
-               System.out.println("Totalmente Pago:  "+ test);
-        }
-        return aux;
+                  
+                  
+               res += ("=============================\n")+
+               ("Nomes Fornecedores : "+ nome+"\n")+
+               ("Data : "+ data+"\n")+
+               ("Valor de Soma : "+ valorsoma+"\n")+
+               ("Valor : "+ valor+"\n")+
+               ("Totalmente Pago:  "+ test+"\n");
+           }
+        return res;
       
     }
-    
+    /**
+     * 
+     * @param fk_fornecedor Chave primária do fornecedor.
+     * @return ArrayList com todos os fornecedores e compras relacionadas
+     * @throws SQLException lança uma exceção
+     * @throws ClassNotFoundException carrega uma classe via String
+     */
     public static ArrayList<Compra> retrieveByFornecedores(int fk_fornecedor) throws SQLException, ClassNotFoundException{
            ArrayList<Compra> aux = new ArrayList<>();
            
@@ -184,13 +192,14 @@ public class CompraDAO {
     /**
      * Método responsável por buscar e retornar as compras realizadas dentro de um intervalo de datas.
      * @param dataInicial Data inicial para realizar a busca 
-     * do tipo LocalDate. Para definir a data utilize LocalDate.of(aaaa,MM,dd).
+     * do tipo Date(sql). Para definir a data utilize Date(LocalDate.of(int aaaa,int MM, int dd)).
      * @param dataFinal Data final para realizar a busca 
-     * do tipo LocalDate. Para definir a data utilize LocalDate.of(aaaa,MM,dd)
-     * @return ArrayList de Compra
-     * @throws SQLException 
+     * do tipo Date(sql). Para definir a data utilize Date(LocalDate.of(int aaaa,int MM, int dd)).
+     * @return ArrayList de todas as compras encontradas no intervalo de datas definido.
+     * @throws SQLException lança uma exceção
+     * @throws ClassNotFoundException carrega uma classe via String
      */
-    public static ArrayList<Compra> retriaveByData(Date dataInicial, Date dataFinal) throws SQLException{
+    public static ArrayList<Compra> retriaveByData(Date dataInicial, Date dataFinal) throws SQLException, ClassNotFoundException{
         if (dataInicial == null || dataFinal == null){
             System.out.println("Digite as datas corretamente!");
         }
@@ -212,6 +221,9 @@ public class CompraDAO {
                                     rs.getInt("fk_fornecedor"), 
                                     rs.getInt("numero"), 
                                     rs.getDate("datas"));
+            
+            c.setFornecedor(FornecedorDAO.retrieve(rs.getInt("fk_fornecedor")));
+            c.setItens(CompraItemDAO.retrieveAll(rs.getInt("pk_compra")));
             aux.add(c);
         }
         
@@ -222,7 +234,7 @@ public class CompraDAO {
     /**
      * Método responsável por atualizar os dados de uma compra no banco de dados(Especificada pela chave primária).
      * @param c Objeto do classe Compra.
-     * @throws SQLException 
+     * @throws SQLException lança uma exceção
      */
      public static void update(Compra c) throws SQLException{
         if (c.getPk_compra()==0){
@@ -250,8 +262,8 @@ public class CompraDAO {
     }
     /**
      * Método responsável por excluir uma compra no banco de dados (Especificada pela chave primária).
-     * @param c Objeto da classe Compra.
-     * @throws SQLException 
+     * @param pk_compra Chave primaria fornecia pelo usuario, para realizar a pesquisa no banco de dados.
+     * @throws SQLException lança uma exceção
      */ 
     public static void delete(int pk_compra) throws SQLException{
         if (pk_compra==0){

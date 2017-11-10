@@ -19,7 +19,7 @@ public class FornecedorDAO {
      * Metodo responsavel para inserção de dados de novos fornecedores no BD
      * @param f objeto da classe Fornecedores    
      * @return Chave primária do fonecedor no BD
-     * @throws SQLException 
+     * @throws SQLException lança uma exceção
      */
     public static int create (Fornecedor f) throws SQLException {
         Connection conn = BancoDados.createConnection();
@@ -46,8 +46,8 @@ public class FornecedorDAO {
     /**
      * Metodo responsavel por fazer a busca de um item na tabela 'fornecedores' no BD
      * @param pk_fornecedor Chave primaria fornecia pelo usuario, na qual fara a busca no BD
-     * @return Objeto Fornecedor
-     * @throws SQLException 
+     * @return f Objeto Fornecedor
+     * @throws SQLException lança uma exceção 
      */
     public static Fornecedor retrieve (int pk_fornecedor) throws SQLException{
        Connection conn = BancoDados.createConnection();
@@ -69,8 +69,8 @@ public class FornecedorDAO {
      
     /**
      * Metodo reponsavel por retornar todos os fornecedores 
-     * @return ArrayList dos Fornecedores
-     * @throws SQLException 
+     * @return aux ArrayList dos Fornecedores
+     * @throws SQLException lança uma exceção
      */
     public static ArrayList<Fornecedor> retrieveAll() throws SQLException{
         ArrayList<Fornecedor> aux = new ArrayList<>();
@@ -94,8 +94,8 @@ public class FornecedorDAO {
     /**
      * Metodo responsavel por realizar um busca de fornecedores no BD realizando filtros de cidades
      * @param nomeCidade Uma String fornecedia pelo usario, deve ser fornecida uma cidade para fazer o filtro da busca
-     * @return Objeto da classe Compra
-     * @throws SQLException 
+     * @return aux Objeto da classe Compra
+     * @throws SQLException lança uma exceção
      */
     public static ArrayList<Fornecedor> retrieveByCidades(String nomeCidade ) throws SQLException{
         ArrayList<Fornecedor> aux = new ArrayList<>();
@@ -121,8 +121,8 @@ public class FornecedorDAO {
     /**
      * Metodo responsavel por realizar um busca de fornecedores no BD realizando filtros de estado
      * @param nomeEstado Uma String fornecedia pelo usario, deve ser fornecida uma estado para fazer o filtro da busca
-     * @return Array de Fornecedores
-     * @throws SQLException 
+     * @return aux Array de Fornecedores
+     * @throws SQLException lança uma exceção 
      */ 
     public static ArrayList<Fornecedor> retrieveByEstado(String nomeEstado) throws SQLException{
         ArrayList<Fornecedor> aux = new ArrayList<>();
@@ -146,7 +146,7 @@ public class FornecedorDAO {
      /**
      * Metodo responsavel por atualizar os dados da tabela 'fonecedores' no BD
      * @param f Objeto da classe Fonecedores
-     * @throws SQLException 
+     * @throws SQLException lança uma exceção 
      */
     public static void update (Fornecedor f) throws SQLException{
         Connection conn =  BancoDados.createConnection();
@@ -170,7 +170,7 @@ public class FornecedorDAO {
     /**
      * Metodo responsavel por excuir um fornecedor do BD
      * @param pk_fornecedor Chave Primária da classe Fornecedor
-     * @throws SQLException 
+     * @throws SQLException lança uma exceção
      */
     public static void delete (int pk_fornecedor) throws SQLException{
         Connection conn = BancoDados.createConnection();

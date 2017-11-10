@@ -11,6 +11,12 @@ import smartbusiness.negocio.FornecedorEndereco;
 
 public class FornecedorEnderecoDAO {
 
+    /**
+     * Metodo responsavel para inserção de dados de novos endereco no BD
+     * @param fe objeto da classe Fornecedores    
+     * @return fe.getPk_endereco() Chave primária do fonecedor no BD
+     * @throws SQLException lança uma exceção
+     */
     public static int create(FornecedorEndereco fe) throws SQLException{ 
             
         
@@ -42,7 +48,12 @@ public class FornecedorEnderecoDAO {
     
         
     }
-    
+    /**
+     * Metodo responsavel por fazer a busca de um item na tabela 'fornecedorendereco' no BD
+     * @param pk_endereco Chave primaria fornecia pelo usuario, na qual fara a busca no BD
+     * @return aux Objeto Endereco
+     * @throws SQLException lança uma exceção
+     */
     public static FornecedorEndereco retrieve (int pk_endereco) throws SQLException{
         Connection conn = BancoDados.createConnection();
          PreparedStatement stm = conn.prepareStatement("SELECT * FROM fornecedores_enderecos WHERE pk_endereco = ?");
@@ -59,6 +70,13 @@ public class FornecedorEnderecoDAO {
            
      
        }
+    
+    /**
+     * Metodo reponsavel por retornar todos os enderecos 
+     * @param fk_fornecedor Chave primaria fornecia pelo usuario, na qual fara a busca no BD
+     * @return ArrayList dos FornecedorEndereco
+     * @throws SQLException lança uma exceção
+     */ 
      public static ArrayList<FornecedorEndereco> retrieveAll(int fk_fornecedor) throws SQLException{
          
         ArrayList<FornecedorEndereco> aux= new ArrayList<>();
@@ -91,7 +109,11 @@ public class FornecedorEnderecoDAO {
         return aux;
                
     }
-
+     /**
+     * Metodo responsavel por atualizar os dados da tabela 'fonecedoresEndereco' no BD
+     * @param fe Objeto da classe Fonecedores
+     * @throws SQLException lança uma exceção
+     */
     public static void update(FornecedorEndereco fe) throws SQLException{
         if (fe.getPk_endereco()==0){
             throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
@@ -117,7 +139,11 @@ public class FornecedorEnderecoDAO {
         
 
     }
-    
+    /**
+     * Metodo responsavel por excuir um endereco do BD
+     * @param pk_endereco Objeto da classe Fornecedor
+     * @throws SQLException lança uma exceção
+     */
     public static void delete (int pk_endereco) throws SQLException{
         if (pk_endereco==0){
            throw new SQLException("Objeto não persistido ainda ou com a chave primária não configurada");
